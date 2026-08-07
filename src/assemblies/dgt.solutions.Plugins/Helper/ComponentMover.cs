@@ -21,13 +21,12 @@ namespace dgt.solutions.Plugins.Helper
         internal IEnumerable<ComponentMoverLogEntry> MoveComponents(Guid originId, string destinationName)
         {
             return MoveComponents(GetSolutionComponents(new List<ConditionExpression>{
-                new ConditionExpression(SolutionComponent.LogicalNames.SolutionId, ConditionOperator.Equal, originId)
+                new ConditionExpression(SolutionComponent.LogicalNames.SolutionId, ConditionOperator.Equal, originId),
 
-                // Ignore appelement components (modern buttons) - they should not need to be moved individually and may cause timeouts
-                new ConditionExpression(SolutionComponent.LogicalNames.ComponentType, ConditionOperator.NotEqual, 10053),
-
-                // Ignore appsettings components - they behave weird and add a lot of stuff
-                new ConditionExpression(SolutionComponent.LogicalNames.ComponentType, ConditionOperator.NotEqual, 10056),
+                // Ignore app child elements - there should be no need to move them independently
+                new ConditionExpression(SolutionComponent.LogicalNames.ComponentType, ConditionOperator.NotEqual, 10053 /* appelement */),
+                new ConditionExpression(SolutionComponent.LogicalNames.ComponentType, ConditionOperator.NotEqual, 10056 /* appsetting */),
+                new ConditionExpression(SolutionComponent.LogicalNames.ComponentType, ConditionOperator.NotEqual, 10160 /* appaction */),
             }), destinationName);
         }
 
